@@ -12,8 +12,23 @@ if (empty($_POST['nmItem']) || empty($_POST['dsItem']) || empty($_POST['precoIte
 $nomeItem = $_POST['nmItem'];
 $descItem = $_POST['dsItem'];
 $precoItem = $_POST['precoItem'];
-$tempoItem = $_POST['tempoItem'];
 
+// Formatação do tempo
+$tempoItem = $_POST['tempoItem'];
+$unidadeTempo = $_POST['unidadeTempo'];
+
+// Converte o tempo para o formato correto (HH:MM:SS)
+if ($unidadeTempo === 'minutos') {
+    $minutos = intval($tempoItem);
+    $horas = floor($minutos / 60);
+    $minutosRestantes = $minutos % 60;
+    $tempoFormatado = sprintf("%02d:%02d:00", $horas, $minutosRestantes);
+} else { // se for horas
+    $horas = intval($tempoItem);
+    $tempoFormatado = sprintf("%02d:00:00", $horas);
+}
+
+// Processamento do arquivo
 $file = $_FILES['file'];
 $name = $file['name'];
 $tmp_name = $file['tmp_name'];
@@ -27,7 +42,7 @@ $fotoCaminho = 'img/fotos/' . $newName;
 $precoItem = str_replace(',', '.', $precoItem);
 
 $sql = "INSERT INTO itens (nmItem, dsitem, precoItem, tempoPreparo, dsFotos)
-        VALUES ('$nomeItem', '$descItem', '$precoItem', '$tempoItem', '$fotoCaminho')";
+        VALUES ('$nomeItem', '$descItem', '$precoItem', '$tempoFormatado', '$fotoCaminho')";
 
 if ($conn->query($sql) === TRUE) {
     header('Location: comidasADM.php');

@@ -12,10 +12,7 @@ $sql = "UPDATE itens
         WHERE idItem=$idItem";
 
 if ($conn->query($sql)) {
-    echo '<script>
-        alert("Prato atualizado!");
-        window.location.href = "comidasADM.php";
-      </script>';
+    header('Location: comidasADM.php');
 } else {
     echo "Erro ao atualizar item: " . $conn->error;
 }
